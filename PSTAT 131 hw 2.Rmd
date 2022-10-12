@@ -1,0 +1,47 @@
+---
+title: "PSTAT 131 HW 2"
+output: html_document
+date: "2022-10-12"
+---
+
+## Linear Regression
+
+For this lab, we will be working with a data set from the UCI (University of California, Irvine) Machine Learning repository ([see website here](http://archive.ics.uci.edu/ml/datasets/Abalone)). The full data set consists of $4,177$ observations of abalone in Tasmania. (Fun fact: [Tasmania](https://en.wikipedia.org/wiki/Tasmania "Tasmania") supplies about $25\%$ of the yearly world abalone harvest.)
+
+![*Fig 1. Inside of an abalone shell.*](https://cdn.shopify.com/s/files/1/1198/8002/products/1d89434927bffb6fd1786c19c2d921fb_2000x_652a2391-5a0a-4f10-966c-f759dc08635c_1024x1024.jpg?v=1582320404){width="152"}
+
+The age of an abalone is typically determined by cutting the shell open and counting the number of rings with a microscope. The purpose of this data set is to determine whether abalone age (**number of rings + 1.5**) can be accurately predicted using other, easier-to-obtain information about the abalone.
+
+The full abalone data set is located in the `\data` subdirectory. Read it into *R* using `read_csv()`. Take a moment to read through the codebook (`abalone_codebook.txt`) and familiarize yourself with the variable definitions.
+
+Make sure you load the `tidyverse` and `tidymodels`!
+
+### Question 1
+
+Your goal is to predict abalone age, which is calculated as the number of rings plus 1.5. Notice there currently is no `age` variable in the data set. Add `age` to the data set.
+
+Assess and describe the distribution of `age`.
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+
+abalone_data <-read.csv("abalone.csv")
+
+age <- abalone_data$rings + 1.5
+
+abalone_data$age <- age
+
+abalone_data %>%
+  ggplot(aes(x=age)) +
+  geom_histogram(bins = 60) +
+  theme_bw()
+```
+
+- The distribution of age seems to be skewed to the right with the data centered around 11 years of age. There seem to be some outliers whose age is close to 24-25. The ages in the data seem to range from around 3 years old to 24 years old.
+
+
+
+
+
+
