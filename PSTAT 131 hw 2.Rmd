@@ -38,7 +38,83 @@ abalone_data %>%
   theme_bw()
 ```
 
-- The distribution of age seems to be skewed to the right with the data centered around 11 years of age. There seem to be some outliers whose age is close to 24-25. The ages in the data seem to range from around 3 years old to 24 years old.
+-   The distribution of age seems to be skewed to the right with the data centered around 11 years of age. There seem to be some outliers whose age is close to 24-25. The ages in the data seem to range from around 3 years old to 24 years old.
+
+### Question 2
+
+Split the abalone data into a training set and a testing set. Use stratified sampling. You should decide on appropriate percentages for splitting the data.
+
+*Remember that you'll need to set a seed at the beginning of the document to reproduce your results.*
+
+```{r}
+
+set.seed(2008)
+
+abalone_split <- initial_split(abalone_data, prop = 0.8, strata = age)
+
+abalone_train <- training(abalone_split)
+abalone_test <- testing(abalone_split)
+```
+
+### Question 3
+
+Using the **training** data, create a recipe predicting the outcome variable, `age`, with all other predictor variables. Note that you should not include `rings` to predict `age`. Explain why you shouldn't use `rings` to predict `age`.
+
+Steps for your recipe:
+
+1.  dummy code any categorical predictors
+
+2.  create interactions between
+
+    -   `type` and `shucked_weight`,
+    -   `longest_shell` and `diameter`,
+    -   `shucked_weight` and `shell_weight`
+
+3.  center all predictors, and
+
+4.  scale all predictors.
+
+You'll need to investigate the `tidymodels` documentation to find the appropriate step functions to use.
+
+    - We should not use rings to predict age as the purpose of the study is to find other 
+     predictors whose information is easier to collect.
+
+
+```{r}
+abalone_train1 <- abalone_train %>% select(-rings)
+ 
+ 
+abalone_recipe <- recipe(age ~ ., data = abalone_train1) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_interact(terms = ~ type:shucked_weight) %>%
+  step_interact(terms = ~ longest_shell : diameter) %>%
+  step_interact(terms = ~ shucked_weight : shell_weight) %>%
+  step_center(all_predictors()) %>%
+  step_scale(all_predictors())
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
