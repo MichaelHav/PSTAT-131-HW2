@@ -79,14 +79,14 @@ You'll need to investigate the `tidymodels` documentation to find the appropriat
     - We should not use rings to predict age as the purpose of the study is to find other 
      predictors whose information is easier to collect.
 
-
 ```{r}
-abalone_train1 <- abalone_train %>% select(-rings)
- 
- 
+# remove rings column from dataset
+abalone_train1 <- subset(abalone_train,select = -rings)
+
+
 abalone_recipe <- recipe(age ~ ., data = abalone_train1) %>%
-  step_dummy(all_nominal_predictors()) %>%
-  step_interact(terms = ~ type:shucked_weight) %>%
+  step_dummy(all_nominal_predictors())%>%
+  step_interact(terms = ~ shucked_weight:type_M) %>%
   step_interact(terms = ~ longest_shell : diameter) %>%
   step_interact(terms = ~ shucked_weight : shell_weight) %>%
   step_center(all_predictors()) %>%
@@ -95,29 +95,51 @@ abalone_recipe <- recipe(age ~ ., data = abalone_train1) %>%
 
 ```
 
+### Question 4
+
+Create and store a linear regression object using the `"lm"` engine.
+
+```{r}
+# specify the model engine that we want to fit
+lm_model <- linear_reg() %>% 
+  set_engine("lm")
 
 
+```
+
+### Question 5
+
+Now:
+
+1.  set up an empty workflow,
+2.  add the model you created in Question 4, and
+3.  add the recipe that you created in Question 3.
+
+```{r}
+lm_wflow <- workflow() %>% 
+  add_model(lm_model) %>% 
+  add_recipe(abalone_recipe)
+
+```
+
+### Question 6
+
+Use your `fit()` object to predict the age of a hypothetical female abalone with longest_shell = 0.50, diameter = 0.10, height = 0.30, whole_weight = 4, shucked_weight = 1, viscera_weight = 2, shell_weight = 1.
+
+```{r}
+
+lm_fit <- fit(lm_wflow,abalone_train1)
+lm_fit
+
+#create new data frame with new predictor values
+predictor_values <- data.frame(longest_shell = 0.50, diameter = 0.10, height = 0.30,
+                               whole_weight = 4, shucked_weight = 1, viscera_weight = 2,
+                               shell_weight = 1,type = "F")
 
 
+# use predict function to retrieve prediction
+predict(lm_fit,predictor_values)
+        
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-   The predicted age of the hypothetical female abalone with the predictors mentioned above is 23
