@@ -74,10 +74,9 @@ Steps for your recipe:
 
 4.  scale all predictors.
 
-You'll need to investigate the `tidymodels` documentation to find the appropriate step functions to use.
+You'll need to investigate the `tidymodels` documentation to find the appropriate step functions to use
 
-    - We should not use rings to predict age as the purpose of the study is to find other 
-     predictors whose information is easier to collect.
+-   We should not use rings to predict age as the purpose of the study is to find other predictors whose information is easier to collect.
 
 ```{r}
 # remove rings column from dataset
@@ -129,7 +128,6 @@ Use your `fit()` object to predict the age of a hypothetical female abalone with
 ```{r}
 
 lm_fit <- fit(lm_wflow,abalone_train1)
-lm_fit
 
 #create new data frame with new predictor values
 predictor_values <- data.frame(longest_shell = 0.50, diameter = 0.10, height = 0.30,
